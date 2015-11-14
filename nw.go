@@ -72,8 +72,8 @@ func longestFileInLine(line string, exists existsFunc) (firstCharIndex int, last
 }
 
 func askUser(question string) (requestedNumbers []string, err error) {
-	fmt.Println()
-	fmt.Print(question)
+	fmt.Fprintln(os.Stderr)
+	fmt.Fprint(os.Stderr, question)
 	ttyFile, err := os.Open("/dev/tty")
 	if err != nil {
 		return nil, err
@@ -109,20 +109,20 @@ type AskForNumbers struct {
 
 func printShortFormat(fileCount *int) PrintFunction {
 	return func(file string, line string, firstCharIndex int, lastCharIndex int) {
-		fmt.Println(strconv.Itoa(*fileCount), file)
+		fmt.Fprintln(os.Stderr, strconv.Itoa(*fileCount), file)
 	}
 }
 
 func printLongFormat(fileCount *int) PrintFunction {
 	return func(file string, line string, firstCharIndex int, lastCharIndex int) {
-		fmt.Print("{")
-		fmt.Print(strconv.Itoa(*fileCount))
-		fmt.Print("} ")
-		fmt.Print(line[:firstCharIndex])
-		fmt.Print("{")
-		fmt.Print(file)
-		fmt.Print("}")
-		fmt.Print(line[lastCharIndex+1:])
+		fmt.Fprint(os.Stderr, "{")
+		fmt.Fprint(os.Stderr, strconv.Itoa(*fileCount))
+		fmt.Fprint(os.Stderr, "} ")
+		fmt.Fprint(os.Stderr, line[:firstCharIndex])
+		fmt.Fprint(os.Stderr, "{")
+		fmt.Fprint(os.Stderr, file)
+		fmt.Fprint(os.Stderr, "}")
+		fmt.Fprint(os.Stderr, line[lastCharIndex+1:])
 	}
 }
 
@@ -205,7 +205,7 @@ func writeToClipboard(buffer *bytes.Buffer) {
 	clipboardOutput := buffer.String()
 	if clipboardOutput != "" {
 		clipboard.WriteAll(clipboardOutput)
-		fmt.Printf("nw: wrote \"%s\" to clipboard\n", clipboardOutput)
+		fmt.Fprintf(os.Stderr, "nw: wrote \"%s\" to clipboard\n", clipboardOutput)
 	}
 }
 
@@ -257,7 +257,7 @@ func main() {
 				os.Exit(1)
 			}
 		} else if !*short {
-			fmt.Print(line)
+			fmt.Fprint(os.Stderr, line)
 		}
 	}
 
