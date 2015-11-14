@@ -7,7 +7,6 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/atotto/clipboard"
 	"os"
 	"strconv"
 	"strings"
@@ -161,7 +160,7 @@ func (afn *AskForNumbers) processEnd() error {
 		fmt.Println("nw: no file names found, NUMBERWANG!")
 		return nil
 	}
-	question := "to clipboard: "
+	question := "to stdout: "
 	if afn.invert {
 		question = "NOT " + question
 	}
@@ -188,7 +187,7 @@ func (afn *AskForNumbers) processEnd() error {
 	for i, file := range afn.files {
 		if _, exists := reqIndexes[i]; exists != afn.invert {
 			afn.clip.WriteString(file)
-			afn.clip.WriteString(" ")
+			afn.clip.WriteString("\n")
 		}
 	}
 
@@ -204,8 +203,7 @@ func (afn *AskForNumbers) processFile(file string) error {
 func writeToClipboard(buffer *bytes.Buffer) {
 	clipboardOutput := buffer.String()
 	if clipboardOutput != "" {
-		clipboard.WriteAll(clipboardOutput)
-		fmt.Fprintf(os.Stderr, "nw: wrote \"%s\" to clipboard\n", clipboardOutput)
+		fmt.Printf(clipboardOutput)
 	}
 }
 
